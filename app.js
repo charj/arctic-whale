@@ -1,3 +1,13 @@
+global.__basedir = __dirname;
+
+var mongoose = require('mongoose');
+
+//Set up default mongoose connection
+var mongoDB = 'mongodb://127.0.0.1:27017/arctic-whale';
+mongoose.connect(mongoDB, {
+  useMongoClient: true
+});
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -7,7 +17,6 @@ var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
-var test = require('./routes/test');
 
 var app = express();
 
@@ -25,7 +34,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/users', users);
-app.use('/test', test);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
