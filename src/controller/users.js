@@ -1,23 +1,8 @@
-var User = require(__basedir + '/src/model/users');
+var UserModel = require(__basedir + '/src/model/users');
 
 // CREATE
 exports.create = function (req, res) {
-
-  // create a new user
-  var newUser = User({
-    name: req.body.name,
-    username: req.body.username,
-    password: req.body.password,
-    admin: false
-  });
-
-  // save the user
-  newUser.save(function (err) {
-    if (err) throw err;
-
-    console.log('User created!');
-  });
-
+  var newUser = UserModel.create(req.body);
   res.status(200).json(newUser);
 }
 
@@ -25,29 +10,34 @@ exports.create = function (req, res) {
 exports.read = function (req, res) {
 
   // get all the users
-  User.find({}, function (err, users) {
-    if (err) throw err;
+  var users = UserModel.findAll();
 
-    // object of all the users
-    console.log(users);
-
-    res.status(200).json(users);
-  });
-
-
-
-
-}
-
-// UPDATE
-exports.user = function (req, res) {
-  var userName = req.body.user_name;
-
-  if (userName == null) {
-    res.status(503).json({
-      "error": "Please provide your `user_name`"
+  users
+    .then(function (params) {
+      res.status(200).json(params);
     })
-  }
+    .catch(function (err) {
+      res.status(400).json(err);
+    })
 
-  res.status(200).json();
+};
+
+// Get User by username
+exports.getUser = function (req, res) {
+  // get a specific user
+  var user = UserModel.findByUserName(req.params.username);
+
+  // if (user.length == 0) {
+  //   return res.status(400).json({"error":"This user could not be found"});
+  // } 
+
+  user
+    .then(function (params) {
+      res.status(200).json(params);
+    })
+    .catch(function (err) {
+      res.status(400).json();
+    })
+
+ 
 }
