@@ -1,43 +1,44 @@
-var UserModel = require(__basedir + '/src/model/users');
+'use strict'
 
-// CREATE
-exports.create = function (req, res) {
-  var newUser = UserModel.create(req.body);
-  res.status(200).json(newUser);
+let UserModel = require(__basedir + '/src/model/users');
+
+// Create a new user
+exports.create = function (request, response) {
+  let newUser = UserModel.create(request.body);
+
+  newUser
+    .then(function(params) {
+        response.status(201).json(params);
+    })
+    .catch(function (params) {
+        response.status(409).json({'error':'This user already exists.'});
+    });
 }
 
-// READ
-exports.read = function (req, res) {
+// List all users
+exports.read = function (request, response) {
 
-  // get all the users
-  var users = UserModel.findAll();
+  let users = UserModel.findAll();
 
   users
     .then(function (params) {
-      res.status(200).json(params);
+      response.status(200).json(params);
     })
     .catch(function (err) {
-      res.status(400).json(err);
+      response.status(400).json(err);
     })
-
 };
 
 // Get User by username
-exports.getUser = function (req, res) {
+exports.getUser = function (request, response) {
   // get a specific user
-  var user = UserModel.findByUserName(req.params.username);
-
-  // if (user.length == 0) {
-  //   return res.status(400).json({"error":"This user could not be found"});
-  // } 
+  let user = UserModel.findByUserName(request.params.username);
 
   user
     .then(function (params) {
-      res.status(200).json(params);
+      response.status(200).json(params);
     })
     .catch(function (err) {
-      res.status(400).json();
+      response.status(400).json();
     })
-
- 
 }
