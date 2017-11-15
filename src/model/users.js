@@ -32,6 +32,7 @@ let User = mongoose.model('User', userSchema);
 
 module.exports.create = function (request) {
     let user = new User(request);
+
     return user.save(function (error) {
         if (error) {
             if (error.name === 'MongoError' && error.code === 11000) {
@@ -60,16 +61,17 @@ module.exports.findAll = function () {
 }
 
 module.exports.findByUserName = function (username) {
-    return User.findOne({
-        "username": username
-    }).exec(function (error, user) {
+    let find = User.findOne({"username": username});
 
-        if (user == null) {
-            return Promise.reject({
-                "error": 'user not found'
-            });
-        }
-
-        return Promise.resolve(user);
-    });
+    return find
+        .then(user => {
+            console.log(user);
+            if (user) {
+                return user;
+            }
+            return Promise.reject('User not found');
+        })
+        .catch(error => {
+            return Promise.reject({'error': error});
+        })
 }
