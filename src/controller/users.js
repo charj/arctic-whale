@@ -24,8 +24,8 @@ exports.read = function (request, response) {
     .then(function (params) {
       response.status(200).json(params);
     })
-    .catch(function (err) {
-      response.status(400).json(err);
+    .catch(function (error) {
+      response.status(400).json(error);
     })
 };
 
@@ -38,7 +38,7 @@ exports.getUser = function (request, response) {
     .then(function (params) {
       response.status(200).json(params);
     })
-    .catch(function (err) {
-      response.status(400).json();
+    .catch(function (error) {
+      response.status(400).json(error);
     })
 }
