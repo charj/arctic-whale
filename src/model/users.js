@@ -24,13 +24,27 @@ let userSchema = new Schema({
     updated_at: Date
 });
 
+userSchema.pre('save', function(next) {
+    // get the current date
+    var currentDate = new Date();
+
+    // change the updated_at field to current date
+    this.updated_at = currentDate;
+
+    // if created_at doesn't exist, add to that field
+    if (!this.created_at)
+      this.created_at = currentDate;
+
+    next();
+  });
+
 // let UserModel = mongoose.model('UserModel', userSchema );
 
 // TODO: Require schema in create method.
 
 let User = mongoose.model('User', userSchema);
 
-module.exports.create = function (request) {
+User.create = function (request) {
     let user = new User(request);
 
     return user.save(function (error) {
@@ -50,7 +64,7 @@ module.exports.create = function (request) {
     });
 }
 
-module.exports.findAll = function () {
+User.findAll = function () {
     return User.find({}, function (error, all) {
         if (error) {
             return Promise.reject(error);
@@ -60,7 +74,7 @@ module.exports.findAll = function () {
     });
 }
 
-module.exports.findByUserName = function (username) {
+User.findByUserName = function (username) {
     let find = User.findOne({"username": username});
 
     return find
@@ -75,3 +89,5 @@ module.exports.findByUserName = function (username) {
             return Promise.reject({'error': error});
         })
 }
+
+module.exports = User;
