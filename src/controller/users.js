@@ -29,6 +29,21 @@ exports.read = function (request, response) {
     })
 };
 
+// Updating an existing user
+exports.update = function (request, response) {
+  let user = UserModel.findOne({username:request.params.username});
+
+  user
+  .then(updatableUser => {
+    updatableUser.set(request.body);
+    updatableUser.save();
+    response.status(200).json(updatableUser);
+  })
+  .catch(error => {
+    response.status(400).json(error);
+  });
+}
+
 // Get User by username
 exports.getUser = function (request, response) {
   // get a specific user

@@ -7,5 +7,6 @@ let userController = require(__basedir + '/src/controller/users');
 router.get('/', userController.read);
 router.get('/:username', userController.getUser);
 router.post('/create', userController.create);
+router.post('/:username', userController.update);
 
 module.exports = router;
